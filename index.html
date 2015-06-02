@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+  <head>
+    <title>BigWig Test</title>
+    <script type="text/javascript" src="./jquery.js"></script>
+    <script type="text/javascript" src="./underscore.js"></script>
+    <script type="text/javascript" src="./jquery-ajax-native.js"></script>
+    <!-- NOTE: using compressed/built jdataview to avoid having to build it ourself. -->
+    <script type="text/javascript" src="./jdataview-compressed.js"></script>
+    <script type="text/javascript" src="./bigwig.js"></script>
+  </head>
+
+  <body>
+    <div id="vis"></div>
+  </body>
+
+<script type="text/javascript">
+    var bigWigDataProvider = new BigWigDataProvider({url: "./test.bigwig"});
+    $.when(bigWigDataProvider._load()).then(function() {
+        $('body').append("<h3>Information about test.bigwig" + "</h3>");
+        $('body').append("Version: " + bigWigDataProvider.version + "<br>");
+        $('body').append("Number of Zoom Levels: " + bigWigDataProvider.numZoomLevels + "<br>");
+        $('body').append("Min: " + bigWigDataProvider._globalStats.scoreMin + "<br>");
+        $('body').append("Max: " + bigWigDataProvider._globalStats.scoreMax + "<br>");
+    });
+</script>
+
