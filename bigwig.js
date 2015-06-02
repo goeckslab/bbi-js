@@ -47,8 +47,8 @@ _.extend(BigWigDataProvider.prototype, {
         var magic = data.getInt32();
         if( magic !== this.BIG_WIG_MAGIC && magic !== this.BIG_BED_MAGIC ) {
             // try the other endianness if no magic
-            this._littleEndian = false;
-            data = new jDataView( dataArraybuffer, 0, 512, true );
+            this._littleEndian = true;
+            data = this.newDataView( dataArraybuffer, 0, 512 );
             magic = data.getInt32();
             if( magic !== this.BIG_WIG_MAGIC && magic !== this.BIG_BED_MAGIC) {
                 console.error('Not a BigWig or BigBed file');
@@ -96,7 +96,7 @@ _.extend(BigWigDataProvider.prototype, {
         // parse the totalSummary if present (summary of all data in the file)
         if( this.totalSummaryOffset ) {
             (function() {
-                 var d = new jDataView( dataArraybuffer, this.totalSummaryOffset.valueOf(), 512 - 304, true );
+                 var d = this.newDataView( dataArraybuffer, this.totalSummaryOffset.valueOf(), 512 - 304);
                  var s = {
                      basesCovered: d.getUint64(),
                      scoreMin: d.getFloat64(),
@@ -152,9 +152,9 @@ _.extend(BigWigDataProvider.prototype, {
                     responseType: 'arraybuffer'
                 },
                 success: function(data) {
-                    debugger;
+                    // this.data.read.apply( this.data, arguments );
                     if(callback){
-                        callback.call(this, data.byteLength);
+                        callback(data);
                     }
                     var dataProvider = new BigWigDataProvider({
                         data: data
@@ -180,7 +180,7 @@ _.extend(BigWigDataProvider.prototype, {
         while ((udo % 4) !== 0) {
             ++udo;
         }
-
+        console.log("Bytes: "+ this.chromTreeOffset + " to " + udo);
         this._read( this.chromTreeOffset, udo - this.chromTreeOffset, function(bpt) {
             /*
            if( ! has('typed-arrays') ) {
@@ -188,7 +188,7 @@ _.extend(BigWigDataProvider.prototype, {
                return;
            }
            */
-           var data = thisB.newDataView( bpt );
+           var data = thisB.newDataView( bpt, this.chromTreeOffset, udo - this.chromTreeOffset );
 
            if( data.getUint32() !== 2026540177 )
                throw "parse error: not a Kent bPlusTree";
