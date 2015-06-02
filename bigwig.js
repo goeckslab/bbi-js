@@ -152,8 +152,9 @@ _.extend(BigWigDataProvider.prototype, {
                     responseType: 'arraybuffer'
                 },
                 success: function(data) {
+                    debugger;
                     if(callback){
-                        callback.call(this, data);
+                        callback.call(this, data.byteLength);
                     }
                     var dataProvider = new BigWigDataProvider({
                         data: data
@@ -187,7 +188,6 @@ _.extend(BigWigDataProvider.prototype, {
                return;
            }
            */
-          console.log('bytes in _readChromTree: ' +  bpt);
            var data = thisB.newDataView( bpt );
 
            if( data.getUint32() !== 2026540177 )
