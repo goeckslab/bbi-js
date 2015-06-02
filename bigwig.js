@@ -163,6 +163,10 @@ _.extend(BigWigDataProvider.prototype, {
         }
     },
 
+    newDataView: function( bytes, offset, length ) {
+        return new jDataView( bytes, offset, length, this._littleEndian );
+    },
+
     /**
      * @private
      */
