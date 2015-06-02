@@ -20,6 +20,8 @@
         $('body').append("<h3>Information about test.bigwig" + "</h3>");
         $('body').append("Version: " + bigWigDataProvider.version + "<br>");
         $('body').append("Number of Zoom Levels: " + bigWigDataProvider.numZoomLevels + "<br>");
+        $('body').append("Number of bases covered: " + bigWigDataProvider._globalStats.basesCovered +
+            "<br/>");
         $('body').append("Min: " + bigWigDataProvider._globalStats.scoreMin + "<br>");
         $('body').append("Max: " + bigWigDataProvider._globalStats.scoreMax + "<br>");
     });
