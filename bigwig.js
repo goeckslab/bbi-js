@@ -177,7 +177,8 @@ _.extend(BigWigDataProvider.prototype, {
         }
 
         this._read( this.chromTreeOffset, udo - this.chromTreeOffset, function(bpt) {
-           if( ! has('typed-arrays') ) {
+           //TODO: Check if $(this).has === has
+           if( ! $(this).has('typed-arrays') ) {
                thisB._failAllDeferred( 'Web browser does not support typed arrays' );
                return;
            }
