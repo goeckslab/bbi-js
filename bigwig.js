@@ -152,6 +152,9 @@ _.extend(BigWigDataProvider.prototype, {
                     responseType: 'arraybuffer'
                 },
                 success: function(data) {
+                    if(callback){
+                        callback.call(data);
+                    }
                     var dataProvider = new BigWigDataProvider({
                         data: data
                     });
