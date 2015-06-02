@@ -177,11 +177,12 @@ _.extend(BigWigDataProvider.prototype, {
         }
 
         this._read( this.chromTreeOffset, udo - this.chromTreeOffset, function(bpt) {
-           //TODO: Check if $(this).has === has
-           if( ! $(this).has('typed-arrays') ) {
+            /*
+           if( ! has('typed-arrays') ) {
                thisB._failAllDeferred( 'Web browser does not support typed arrays' );
                return;
            }
+           */
            var data = thisB.newDataView( bpt );
 
            if( data.getUint32() !== 2026540177 )
