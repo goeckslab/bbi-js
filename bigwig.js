@@ -48,7 +48,7 @@ _.extend(BigWigDataProvider.prototype, {
         if( magic !== this.BIG_WIG_MAGIC && magic !== this.BIG_BED_MAGIC ) {
             // try the other endianness if no magic
             this._littleEndian = true;
-            data = this.newDataView( dataArraybuffer, 0, 512 );
+            data = this.newDataView( dataArraybuffer );
             magic = data.getInt32();
             if( magic !== this.BIG_WIG_MAGIC && magic !== this.BIG_BED_MAGIC) {
                 console.error('Not a BigWig or BigBed file');
@@ -136,6 +136,8 @@ _.extend(BigWigDataProvider.prototype, {
       * Read from the bbi file, respecting the configured chunkSizeLimit.
       */
     _read: function(start, size, callback, errorcallback) {
+        console.log("start:"+ start);
+        console.log("size:"+ size);
         if(size > this.chunkSizeLimit) {
             // TODO: raise error.
         }
@@ -188,7 +190,7 @@ _.extend(BigWigDataProvider.prototype, {
                return;
            }
            */
-           var data = thisB.newDataView( bpt, this.chromTreeOffset, udo - this.chromTreeOffset );
+           var data = thisB.newDataView( bpt );
 
            if( data.getUint32() !== 2026540177 )
                throw "parse error: not a Kent bPlusTree";
