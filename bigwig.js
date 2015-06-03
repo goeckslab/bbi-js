@@ -279,7 +279,7 @@ _.extend(BigWigDataProvider.prototype, {
 
     _getFeatures: function( query, featureCallback, endCallback, errorCallback ) {
 
-        var chrName = this.browser.regularizeReferenceName( query.ref );
+        var chrName = this.regularizeReferenceName( query.ref );
         var min = query.start;
         var max = query.end;
 
@@ -296,6 +296,20 @@ _.extend(BigWigDataProvider.prototype, {
             array.forEach( features || [], featureCallback );
             endCallback();
         }), errorCallback );
+    },
+
+    readWigData: function(chrName, min, max, callback, errorCallback ) {
+        // console.log( 'reading wig data from '+chrName+':'+min+'..'+max);
+        var chr = this.bwg.refsByName[chrName];
+        if ( ! chr ) {
+            // Not an error because some .bwgs won't have data for all chromosomes.
+
+            // dlog("Couldn't find chr " + chrName);
+            // dlog('Chroms=' + miniJSONify(this.bwg.refsByName));
+            callback([]);
+        } else {
+            this.readWigDataById( chr.id, min, max, callback, errorCallback );
+        }
     },
 
     getUnzoomedView: function() {
