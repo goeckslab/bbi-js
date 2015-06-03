@@ -312,6 +312,32 @@ _.extend(BigWigDataProvider.prototype, {
         }
     },
 
+    readWigDataById: function(chr, min, max, callback, errorCallback ) {
+        if( !this.cirHeader ) {
+            var readCallback = lang.hitch( this, 'readWigDataById', chr, min, max, callback, errorCallback );
+            if( this.cirHeaderLoading ) {
+                this.cirHeaderLoading.push( readCallback );
+            }
+            else {
+                this.cirHeaderLoading = [ readCallback ];
+                // dlog('No CIR yet, fetching');
+                this.bwg.data
+                    .read( this.cirTreeOffset, 48, lang.hitch( this, function(result) {
+                                this.cirHeader = result;
+                                this.cirBlockSize = this.bwg.newDataView( result, 4, 4 ).getUint32();
+                                array.forEach( this.cirHeaderLoading, function(c) { c(); });
+                                delete this.cirHeaderLoading;
+                            }), errorCallback );
+            }
+            return;
+        }
+
+        //dlog('_readWigDataById', chr, min, max, callback);
+
+        var worker = new RequestWorker( this, chr, min, max, callback, errorCallback );
+        worker.cirFobRecur([this.cirTreeOffset + 48], 1);
+    },
+
     getUnzoomedView: function() {
         if (!this.unzoomedView) {
             var cirLen = 4000;
