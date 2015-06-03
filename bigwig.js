@@ -14,8 +14,8 @@ var BigWigDataProvider = function(options) {
     if( ! this._deferred )
         this._deferred = {};
 
-    this._deferred.features = $.Deferred(this._getFeatures);
-    this._deferred.stats = $.Deferred(this._getGlobalStats);
+    this._deferred.features = $.Deferred(this._getFeatures.bind(this));
+    this._deferred.stats = $.Deferred(this._getGlobalStats.bind(this));
 };
 
 // Add attributes/methods. 
@@ -277,8 +277,7 @@ _.extend(BigWigDataProvider.prototype, {
      * others are not.
      */
     hasRefSeq: function( seqName, callback, errorCallback ) {
-        var thisB = this;
-        seqName = thisB.browser.regularizeReferenceName( seqName );
+        seqName = this.regularizeReferenceName( seqName );
         this._deferred.features.then(function() {
             callback( seqName in thisB.refsByName );
         }, errorCallback );
