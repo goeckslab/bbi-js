@@ -303,7 +303,7 @@ _.extend(BigWigDataProvider.prototype, {
                 // dlog('No CIR yet, fetching');
                 this._read( this.cirTreeOffset, 48, lang.hitch( this, function(result) {
                                 this.cirHeader = result;
-                                this.cirBlockSize = this.bwg.newDataView( result, 4, 4 ).getUint32();
+                                this.cirBlockSize = this.newDataView( result, 4, 4 ).getUint32();
                                 array.forEach( this.cirHeaderLoading, function(c) { c(); });
                                 delete this.cirHeaderLoading;
                             }), errorCallback );
