@@ -114,8 +114,8 @@ _.extend(BigWigDataProvider.prototype, {
         // NOTE: this does not yet work.
         this._readChromTree(
             function() {
-                this._deferred.features.resolve({success: true});
-                this._deferred.stats.resolve({success: true});
+                //this._deferred.features.resolve({success: true});
+                //this._deferred.stats.resolve({success: true});
             }
         );
     },
@@ -225,8 +225,8 @@ _.extend(BigWigDataProvider.prototype, {
 
                        var refRec = { name: key, id: refId, length: refSize };
 
-                       //dlog(key + ':' + refId + ',' + refSize);
-                       thisB.refsByName[ thisB.browser.regularizeReferenceName(key) ] = refRec;
+                       console.log(key + ':' + refId + ',' + refSize);
+                       thisB.refsByName[ thisB.regularizeReferenceName(key) ] = refRec;
                        thisB.refsByNumber[refId] = refRec;
                    } else {
                        // parse index node
@@ -238,10 +238,31 @@ _.extend(BigWigDataProvider.prototype, {
                    }
                }
            };
+
            bptReadNode(rootNodeOffset);
 
            callback.call( thisB, thisB );
             }, errorCallback );
+    },
+
+    /**
+     * Implement the JBrowse Browser.regularizeReferenceName
+     * @param  {[type]} refname [description]
+     * @return {[type]}         [description]
+     */
+    regularizeReferenceName: function(refname){
+        /* TODO: Check if it is for save processing purpose or not, and if it is mendatory
+        if( this.config.exactReferenceSequenceNames ){
+            return refname;
+        }
+        */
+        refname = refname.toLowerCase()
+                         .replace(/^chro?m?(osome)?/,'chr')
+                         .replace(/^co?n?ti?g/,'ctg')
+                         .replace(/^scaff?o?l?d?/,'scaffold')
+                         .replace(/^([a-z]*)0+/,'$1')
+                         .replace(/^(\d+)$/, 'chr$1' );
+        return refname;
     },
 
     /**
