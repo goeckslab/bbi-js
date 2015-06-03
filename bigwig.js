@@ -9,6 +9,13 @@
  */
 var BigWigDataProvider = function(options) {
     this.url = options.url;
+
+    // We init the deferred(s)
+    if( ! this._deferred )
+        this._deferred = {};
+
+    this._deferred.features = $.Deferred(this._getFeatures);
+    this._deferred.stats = $.Deferred(this._getGlobalStats);
 };
 
 // Add attributes/methods. 
@@ -114,15 +121,15 @@ _.extend(BigWigDataProvider.prototype, {
         // NOTE: this does not yet work.
         this._readChromTree(
             function() {
-                //this._deferred.features.resolve({success: true});
-                //this._deferred.stats.resolve({success: true});
+                this._deferred.features.resolve({success: true});
+                this._deferred.stats.resolve({success: true});
             }
         );
     },
 
     _getGlobalStats: function( successCallback, errorCallback ) {
         var s = this._globalStats || {};
-
+        console.log("Get the global stats");
         // calc mean and standard deviation if necessary
         if( !( 'scoreMean' in s ))
             s.scoreMean = s.basesCovered ? s.scoreSum / s.basesCovered : 0;
@@ -140,7 +147,27 @@ _.extend(BigWigDataProvider.prototype, {
             // TODO: raise error.
         }
         else {
-            this.read();
+            // Read data from remote file.
+            return $.ajax({
+                type: 'GET',
+                dataType: 'native',
+                url: this.url,
+                beforeSend: function(xhrObj) {
+                    xhrObj.setRequestHeader("Range", "bytes=" + start + "-" + (start + size));
+                },
+                xhrFields: {
+                    responseType: 'arraybuffer'
+                },
+                success: function(data) {
+                    // this.data.read.apply( this.data, arguments );
+                    if(callback){
+                        callback(data);
+                    }
+                    var dataProvider = new BigWigDataProvider({
+                        data: data
+                    });
+                }
+            });
         }
     },
 
@@ -258,7 +285,6 @@ _.extend(BigWigDataProvider.prototype, {
     },
 
     _getFeatures: function( query, featureCallback, endCallback, errorCallback ) {
-
         var chrName = this.regularizeReferenceName( query.ref );
         var min = query.start;
         var max = query.end;
@@ -280,7 +306,7 @@ _.extend(BigWigDataProvider.prototype, {
 
     readWigData: function(chrName, min, max, callback, errorCallback ) {
         // console.log( 'reading wig data from '+chrName+':'+min+'..'+max);
-        var chr = this.bwg.refsByName[chrName];
+        var chr = this.refsByName[chrName];
         if ( ! chr ) {
             // Not an error because some .bwgs won't have data for all chromosomes.
 
