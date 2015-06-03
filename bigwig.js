@@ -293,6 +293,7 @@ _.extend(BigWigDataProvider.prototype, {
     },
 
     readWigDataById: function(chr, min, max, callback, errorCallback ) {
+        // TODO: this was representing Window
         if( !this.cirHeader ) {
             var readCallback = lang.hitch( this, 'readWigDataById', chr, min, max, callback, errorCallback );
             if( this.cirHeaderLoading ) {
