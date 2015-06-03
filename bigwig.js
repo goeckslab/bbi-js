@@ -136,8 +136,6 @@ _.extend(BigWigDataProvider.prototype, {
       * Read from the bbi file, respecting the configured chunkSizeLimit.
       */
     _read: function(start, size, callback, errorcallback) {
-        console.log("start:"+ start);
-        console.log("size:"+ size);
         if(size > this.chunkSizeLimit) {
             // TODO: raise error.
         }
@@ -182,7 +180,6 @@ _.extend(BigWigDataProvider.prototype, {
         while ((udo % 4) !== 0) {
             ++udo;
         }
-        console.log("Bytes: "+ this.chromTreeOffset + " to " + udo);
         this._read( this.chromTreeOffset, udo - this.chromTreeOffset, function(bpt) {
             /*
            if( ! has('typed-arrays') ) {
@@ -225,7 +222,6 @@ _.extend(BigWigDataProvider.prototype, {
 
                        var refRec = { name: key, id: refId, length: refSize };
 
-                       console.log(key + ':' + refId + ',' + refSize);
                        thisB.refsByName[ thisB.regularizeReferenceName(key) ] = refRec;
                        thisB.refsByNumber[refId] = refRec;
                    } else {
