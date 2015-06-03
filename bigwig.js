@@ -140,27 +140,7 @@ _.extend(BigWigDataProvider.prototype, {
             // TODO: raise error.
         }
         else {
-            // Read data from remote file.
-            return $.ajax({
-                type: 'GET',
-                dataType: 'native',
-                url: this.url,
-                beforeSend: function(xhrObj) {
-                    xhrObj.setRequestHeader("Range", "bytes=" + start + "-" + (start + size));
-                },
-                xhrFields: {
-                    responseType: 'arraybuffer'
-                },
-                success: function(data) {
-                    // this.data.read.apply( this.data, arguments );
-                    if(callback){
-                        callback(data);
-                    }
-                    var dataProvider = new BigWigDataProvider({
-                        data: data
-                    });
-                }
-            });
+            this.read();
         }
     },
 
@@ -321,8 +301,7 @@ _.extend(BigWigDataProvider.prototype, {
             else {
                 this.cirHeaderLoading = [ readCallback ];
                 // dlog('No CIR yet, fetching');
-                this.bwg.data
-                    .read( this.cirTreeOffset, 48, lang.hitch( this, function(result) {
+                this._read( this.cirTreeOffset, 48, lang.hitch( this, function(result) {
                                 this.cirHeader = result;
                                 this.cirBlockSize = this.bwg.newDataView( result, 4, 4 ).getUint32();
                                 array.forEach( this.cirHeaderLoading, function(c) { c(); });
