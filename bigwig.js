@@ -14,8 +14,8 @@ var BigWigDataProvider = function(options) {
     if( ! this._deferred )
         this._deferred = {};
 
-    this._deferred.features = $.Deferred(this._getFeatures.bind(this));
-    this._deferred.stats = $.Deferred(this._getGlobalStats.bind(this));
+    //this._deferred.features = $.Deferred(this._getFeatures.bind(this));
+    //this._deferred.stats = $.Deferred(this._getGlobalStats.bind(this));
 };
 
 // Add attributes/methods. 
@@ -121,8 +121,8 @@ _.extend(BigWigDataProvider.prototype, {
         // NOTE: this does not yet work.
         this._readChromTree(
             function() {
-                this._deferred.features.resolve({success: true});
-                this._deferred.stats.resolve({success: true});
+                //this._deferred.features.resolve({success: true});
+                //this._deferred.stats.resolve({success: true});
             }
         );
     },
