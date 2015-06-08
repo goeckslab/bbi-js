@@ -7,6 +7,8 @@
 /**
  * Provides data from a BigWig file.
  */
+
+
 var BigWigDataProvider = function(options) {
     this.url = options.url;
 
